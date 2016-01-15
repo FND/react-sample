@@ -15,22 +15,33 @@ const STORE = {
 	}]
 };
 
-let COMP;
+let state = { config: CONFIG, store: STORE };
+let components = {
+	index: { // component by tag
+		TaskApp: TaskApp
+	},
+	update() {
+		Object.keys(this.index).forEach(tag => {
+			this.render(tag, this.index[tag]);
+		});
+	},
+	render(tag, component) {
+		let nodes = document.querySelectorAll(tag);
+		nodes = [].slice.call(nodes)
+		nodes.forEach(node => {
+			let el = createElement(component, state);
+			return render(el, node);
+		});
+
+		this.index[tag] = component;
+	}
+};
+
+components.update();
 setInterval(() => {
 	console.log("====");
 	STORE.tasks.pop(0);
-	COMP.setState(STORE);
+
+	components.update();
 	console.log("----");
 }, 2000);
-
-let state = { config: CONFIG, store: STORE };
-renderComponent("TaskApp", TaskApp);
-
-function renderComponent(tag, component) {
-	let nodes = document.querySelectorAll(tag);
-	[].forEach.call(nodes, node => {
-		let el = createElement(component, state);
-		COMP = render(el, node);
-		console.log(COMP);
-	});
-}
