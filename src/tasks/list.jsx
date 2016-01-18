@@ -8,7 +8,6 @@ export default class TaskList extends Component {
 	}
 
 	render() {
-		console.log("RENDER LIST", this.state);
 		return <ul>
 			{this.state.tasks.map((task, i) => {
 				return <TaskItem key={i} task={task} />

@@ -8,7 +8,10 @@ export default class TaskApp extends Component {
 	}
 
 	render() {
-		console.log("RENDER APP", this.state);
 		return <TaskList tasks={this.state.tasks} />
+	}
+
+	updateState(store) {
+		this.setState({ tasks: store.tasks });
 	}
 }

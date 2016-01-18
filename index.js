@@ -12,36 +12,39 @@ const STORE = {
 	}, {
 		label: "dolor sit amet",
 		owner: "Jane Doe"
+	}, {
+		label: "...",
+		owner: "..."
 	}]
 };
 
-let state = { config: CONFIG, store: STORE };
 let components = {
-	index: { // component by tag
-		TaskApp: TaskApp
-	},
-	update() {
+	index: {}, // top-level component instances by tag
+	update(components) {
 		Object.keys(this.index).forEach(tag => {
-			this.render(tag, this.index[tag]);
+			this.index[tag].forEach(instance => {
+				instance.updateState(STORE);
+			});
 		});
 	},
 	render(tag, component) {
 		let nodes = document.querySelectorAll(tag);
 		nodes = [].slice.call(nodes)
-		nodes.forEach(node => {
-			let el = createElement(component, state);
+
+		this.index[tag] = nodes.map(node => {
+			let el = createElement(component, { config: CONFIG, store: STORE });
 			return render(el, node);
 		});
-
-		this.index[tag] = component;
 	}
 };
 
-components.update();
-setInterval(() => {
-	console.log("====");
-	STORE.tasks.pop(0);
+components.render("TaskApp", TaskApp);
 
+setInterval(() => {
+	if(STORE.tasks.length === 2) {
+		return;
+	}
+
+	STORE.tasks.pop(0);
 	components.update();
-	console.log("----");
 }, 2000);

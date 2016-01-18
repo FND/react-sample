@@ -7,7 +7,6 @@ export default class TaskItem extends Component {
 	}
 
 	render() {
-		console.log("RENDER ITEM", this.state);
 		let task = this.state.task;
 		return <li>
 			{task.label} &#8203;
